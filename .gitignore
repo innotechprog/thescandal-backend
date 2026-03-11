@@ -1,0 +1,6 @@
+node_modules/
+.env
+
+# Ignore all uploads except the placeholder
+uploads/*
+!uploads/.gitkeep
