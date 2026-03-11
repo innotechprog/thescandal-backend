@@ -8,6 +8,7 @@ const fs = require('fs');
 const rateLimit = require('express-rate-limit');
 
 const sequelize = require('./db');
+const { runMigrations } = require('./migrations/migrator');
 // Import models so Sequelize registers them before sync()
 require('./models/Post');
 require('./models/Comment');
@@ -126,8 +127,8 @@ sequelize
   .authenticate()
   .then(() => {
     console.log('[server] Connected to PostgreSQL');
-    // Create tables if they don't exist (safe — never drops data)
-    return sequelize.sync();
+    // Apply pending schema migrations before serving traffic.
+    return runMigrations();
   })
   .then(() => {
     const PORT = parseInt(process.env.PORT, 10) || 5001;

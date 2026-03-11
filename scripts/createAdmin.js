@@ -11,6 +11,7 @@ require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const readline = require('readline');
 const bcrypt = require('bcryptjs');
 const sequelize = require('../db');
+const { runMigrations } = require('../migrations/migrator');
 const Admin = require('../models/Admin');
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
@@ -20,7 +21,7 @@ async function main() {
   console.log('\n=== TheScandal Admin Account Creator ===\n');
 
   await sequelize.authenticate();
-  await sequelize.sync();
+  await runMigrations();
   console.log('Connected to PostgreSQL.\n');
 
   const username = (await prompt('Admin username: ')).trim();
